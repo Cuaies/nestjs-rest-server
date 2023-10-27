@@ -1,6 +1,6 @@
 {
   "name": "nestjs-rest-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "prisma": {
     "seed": "ts-node --transpile-only prisma/seed.ts"
@@ -11,7 +11,6 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-
     "prisma:dev:deploy": "prisma migrate deploy",
     "prisma:dev:seed": "prisma db seed",
     "db:dev:rm": "docker compose rm dev-db -s -f -v",
@@ -23,7 +22,6 @@
     "start:dev": "nest start --watch",
     "prestart:debug": "npm run db:dev:restart",
     "start:debug": "nest start --debug --watch",
-
     "prisma:test:deploy": "dotenv -e .env.test -- prisma migrate deploy",
     "prisma:test:seed": "dotenv -e .env.test -- prisma db seed",
     "db:test:rm": "docker compose --env-file .env.test rm test-db -s -f -v",
@@ -31,7 +29,6 @@
     "db:test:restart": "npm run db:test:rm && npm run db:test:up && sleep 3 && npm run prisma:test:deploy && npm run prisma:test:seed",
     "pretest:e2e": "npm run db:test:restart",
     "test:e2e": "dotenv -e .env.test -- jest --config ./test/jest-e2e.json",
-
     "prisma:prod:deploy": "dotenv -e .env.prod -- prisma migrate deploy",
     "prisma:prod:seed": "dotenv -e .env.prod -- prisma db seed",
     "db:prod:stop": "docker compose --env-file .env.prod stop prod-db",
