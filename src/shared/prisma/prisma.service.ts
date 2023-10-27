@@ -12,5 +12,11 @@ export class PrismaService extends PrismaClient {
    */
   seedDatabase(seedData: SeedData) {
     return this.seedDatabase(seedData);
+
+  /**
+   * Cleans the database.
+   */
+  cleanDb() {
+    return this.user.deleteMany({});
   }
 }
