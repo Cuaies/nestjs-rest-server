@@ -38,7 +38,7 @@
     "db:prod:up": "docker compose --env-file .env.prod up prod-db -d",
     "db:prod:restart": "npm run db:prod:stop && npm run db:prod:up && sleep 3 && npm run prisma:prod:deploy && npm run prisma:prod:seed",
     "prestart:prod": "npm run build && npm run db:prod:restart",
-    "start:prod": "node dist/src/main"
+    "start:prod": "dotenv -e .env.prod -- node dist/src/main"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
