@@ -7,7 +7,7 @@ import { SeedData } from './ts/types';
 export const seedData: SeedData = {
   users: [
     {
-      id: TestIds.EXISTENT,
+      id: 1,
       name: 'John Doe',
       email: 'john@example.com',
       password: 'password12',
@@ -47,18 +47,18 @@ export const seedData: SeedData = {
       userId: 1,
     },
     {
-      id: 2,
+      id: TestIds.LINKED,
       amount: 75.5,
       dueDate: new Date('2023-10-24'),
       details: 'Internet bill for October',
       userId: 1,
     },
     {
-      id: 3,
+      id: TestIds.FOREIGN,
       amount: 200.0,
       dueDate: new Date('2023-10-23'),
       details: 'Rent for Apartment A',
-      userId: 1,
+      userId: 2,
     },
     {
       id: 4,
@@ -190,14 +190,14 @@ export const seedData: SeedData = {
       userId: 1,
     },
     {
-      id: 2,
+      id: TestIds.LINKED,
       amount: 50.5,
       dueDate: new Date('2023-10-24'),
       details: 'Consulting services - Client B',
       userId: 1,
     },
     {
-      id: 3,
+      id: TestIds.FOREIGN,
       amount: 75.0,
       dueDate: new Date('2023-10-23'),
       details: 'Graphic design work - Project C',
