@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { JwtAtGuard } from '../../../core/guards';
 import { BillService } from './bill.service';
+import { AuthenticatedUser } from '../../../core/decorators';
+import { User } from '@prisma/client';
 
 @Controller('bills')
 export class BillController {
@@ -15,19 +17,25 @@ export class BillController {
 
   @UseGuards(JwtAtGuard)
   @Get()
-  getBills() {
-    return this.billService.getBills();
+  getBills(@AuthenticatedUser() user: User) {
+    return this.billService.getBills(user);
   }
 
   @UseGuards(JwtAtGuard)
   @Get('/:id')
-  getBillById(@Param('id', ParseIntPipe) id: number) {
-    return this.billService.getBillById(id);
+  getBillById(
+    @AuthenticatedUser() user: User,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.billService.getBillById(user, id);
   }
 
   @UseGuards(JwtAtGuard)
   @Delete('/:id')
-  deleteBillById(@Param('id', ParseIntPipe) id: number) {
-    return this.billService.deleteBillById(id);
+  deleteBillById(
+    @AuthenticatedUser() user: User,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.billService.deleteBillById(user, id);
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Bill, Prisma } from '@prisma/client';
+import { Bill, Prisma, User } from '@prisma/client';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
 
 @Injectable()
@@ -7,10 +7,13 @@ export class BillService {
   constructor(private prismaService: PrismaService) {}
 
   /**
-   * Retrieves all bills.
+   * Retrieves all bills that belong to the user.
    */
-  async getBills() {
+  async getBills(user: User) {
     return this.prismaService.bill.findMany({
+      where: {
+        userId: user.id,
+      },
       select: {
         id: true,
         amount: true,
@@ -20,12 +23,13 @@ export class BillService {
   }
 
   /**
-   * Retrieves a bill by id.
+   * Retrieves a bill by id, if it belongs to the user.
    */
-  async getBillById(id: number) {
+  async getBillById(user: User, id: number) {
     const bill = await this.prismaService.bill.findUnique({
       where: {
         id,
+        userId: user.id,
       },
     });
 
@@ -37,15 +41,16 @@ export class BillService {
   }
 
   /**
-   * Deletes a bill by id.
+   * Deletes a bill by id, if it belongs to the user.
    */
-  async deleteBillById(id: number) {
+  async deleteBillById(user: User, id: number) {
     let bill: Bill;
 
     try {
       bill = await this.prismaService.bill.delete({
         where: {
           id,
+          userId: user.id,
         },
       });
     } catch (e) {
