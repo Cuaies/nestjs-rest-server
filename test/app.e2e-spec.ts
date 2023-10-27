@@ -181,6 +181,15 @@ describe('App (e2e)', () => {
             .expectStatus(HttpStatus.NOT_FOUND);
         });
 
+        test('should throw if the resource does not belong to the user', () => {
+          return spec()
+            .get(`/bills/${TestIds.FOREIGN}`)
+            .withHeaders({
+              Authorization: `Bearer $S{access_token}`,
+            })
+            .expectStatus(HttpStatus.NOT_FOUND);
+        });
+
         test('should return the resource', () => {
           return spec()
             .get(`/bills/${TestIds.EXISTENT}`)
@@ -201,6 +210,15 @@ describe('App (e2e)', () => {
         test('should throw if the resource does not exist', () => {
           return spec()
             .delete(`/bills/${TestIds.NON_EXISTENT}`)
+            .withHeaders({
+              Authorization: `Bearer $S{access_token}`,
+            })
+            .expectStatus(HttpStatus.NOT_FOUND);
+        });
+
+        test('should throw if the resource does not belong to the user', () => {
+          return spec()
+            .delete(`/bills/${TestIds.FOREIGN}`)
             .withHeaders({
               Authorization: `Bearer $S{access_token}`,
             })
@@ -252,6 +270,15 @@ describe('App (e2e)', () => {
             .expectStatus(HttpStatus.NOT_FOUND);
         });
 
+        test('should throw if the resource does not belong to the user', () => {
+          return spec()
+            .get(`/invoices/${TestIds.FOREIGN}`)
+            .withHeaders({
+              Authorization: `Bearer $S{access_token}`,
+            })
+            .expectStatus(HttpStatus.NOT_FOUND);
+        });
+
         test('should return the resource', () => {
           return spec()
             .get(`/invoices/${TestIds.EXISTENT}`)
@@ -272,6 +299,15 @@ describe('App (e2e)', () => {
         test('should throw if the resource does not exist', () => {
           return spec()
             .delete(`/invoices/${TestIds.NON_EXISTENT}`)
+            .withHeaders({
+              Authorization: `Bearer $S{access_token}`,
+            })
+            .expectStatus(HttpStatus.NOT_FOUND);
+        });
+
+        test('should throw if the resource does not belong to the user', () => {
+          return spec()
+            .delete(`/invoices/${TestIds.FOREIGN}`)
             .withHeaders({
               Authorization: `Bearer $S{access_token}`,
             })
