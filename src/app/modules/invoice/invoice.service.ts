@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Invoice, Prisma } from '@prisma/client';
+import { Invoice, Prisma, User } from '@prisma/client';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
 
 @Injectable()
@@ -7,10 +7,13 @@ export class InvoiceService {
   constructor(private prismaService: PrismaService) {}
 
   /**
-   * Retrieves all invoices.
+   * Retrieves all invoices that belong to the user.
    */
-  async getInvoices() {
+  async getInvoices(user: User) {
     return this.prismaService.invoice.findMany({
+      where: {
+        userId: user.id,
+      },
       select: {
         id: true,
         amount: true,
@@ -20,12 +23,13 @@ export class InvoiceService {
   }
 
   /**
-   * Retrieves an invoice by it's id.
+   * Retrieves an invoice by it's id, if it belongs to the user.
    */
-  async getInvoiceById(id: number) {
+  async getInvoiceById(user: User, id: number) {
     const invoice = await this.prismaService.invoice.findUnique({
       where: {
         id,
+        userId: user.id,
       },
     });
 
@@ -37,15 +41,16 @@ export class InvoiceService {
   }
 
   /**
-   * Deletes an invoice by it's id.
+   * Deletes an invoice by it's id, if it belongs to the user.
    */
-  async deleteInvoiceById(id: number) {
+  async deleteInvoiceById(user: User, id: number) {
     let invoice: Invoice;
 
     try {
       invoice = await this.prismaService.invoice.delete({
         where: {
           id,
+          userId: user.id,
         },
       });
     } catch (e) {
