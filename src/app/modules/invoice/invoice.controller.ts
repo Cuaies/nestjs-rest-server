@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
 import { JwtAtGuard } from '../../../core/guards';
+import { AuthenticatedUser } from '../../../core/decorators';
+import { User } from '@prisma/client';
 
 @Controller('invoices')
 export class InvoiceController {
@@ -15,19 +17,25 @@ export class InvoiceController {
 
   @UseGuards(JwtAtGuard)
   @Get()
-  getInvoices() {
-    return this.invoiceService.getInvoices();
+  getInvoices(@AuthenticatedUser() user: User) {
+    return this.invoiceService.getInvoices(user);
   }
 
   @UseGuards(JwtAtGuard)
   @Get('/:id')
-  getInvoiceById(@Param('id', ParseIntPipe) id: number) {
-    return this.invoiceService.getInvoiceById(id);
+  getInvoiceById(
+    @AuthenticatedUser() user: User,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.invoiceService.getInvoiceById(user, id);
   }
 
   @UseGuards(JwtAtGuard)
   @Delete('/:id')
-  deleteInvoiceById(@Param('id', ParseIntPipe) id: number) {
-    return this.invoiceService.deleteInvoiceById(id);
+  deleteInvoiceById(
+    @AuthenticatedUser() user: User,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.invoiceService.deleteInvoiceById(user, id);
   }
 }
