@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { SeedData } from '../../../prisma/ts/types';
+import { seedDatabase } from '../../../prisma/seed';
 
 /**
  * Provides a singleton instance of PrismaClient.
@@ -11,7 +12,8 @@ export class PrismaService extends PrismaClient {
    * Seeds the database with the seed data.
    */
   seedDatabase(seedData: SeedData) {
-    return this.seedDatabase(seedData);
+    return seedDatabase(this, seedData);
+  }
 
   /**
    * Cleans the database.
