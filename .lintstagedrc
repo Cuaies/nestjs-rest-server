@@ -1,0 +1,7 @@
+{
+  "{src,test}/**/*.{js,ts}": [
+    "eslint src",
+    "prettier --check",
+    "npm run test:e2e -- --silent --no-coverage --passWithNoTests"
+  ]
+}
