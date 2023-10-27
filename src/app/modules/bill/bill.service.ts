@@ -7,7 +7,7 @@ export class BillService {
   constructor(private prismaService: PrismaService) {}
 
   /**
-   * Retrieves all resources.
+   * Retrieves all bills.
    */
   async getBills() {
     return this.prismaService.bill.findMany({
@@ -20,7 +20,7 @@ export class BillService {
   }
 
   /**
-   * Retrieves a singular resource by id.
+   * Retrieves a bill by id.
    */
   async getBillById(id: number) {
     const bill = await this.prismaService.bill.findUnique({
@@ -37,7 +37,7 @@ export class BillService {
   }
 
   /**
-   * Deletes a resoure by id.
+   * Deletes a bill by id.
    */
   async deleteBillById(id: number) {
     let bill: Bill;
