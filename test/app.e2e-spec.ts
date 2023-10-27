@@ -8,6 +8,7 @@ import { PrismaService } from '../src/shared/prisma/prisma.service';
 import { spec } from 'pactum';
 import { seedData } from '../prisma/seedData';
 import { LoginDTO, RegisterDTO } from '../src/app/modules/auth/dto';
+import { TestIds } from '../src/ts/enums/testIds.enum';
 
 describe('App (e2e)', () => {
   const PORT = 3005;
@@ -147,7 +148,76 @@ describe('App (e2e)', () => {
     });
   });
 
-  test.todo('Bills');
+  describe('/bills', () => {
+    describe('/', () => {
+      test('should throw if there is no current user', () => {
+        return spec().get('/bills').expectStatus(HttpStatus.UNAUTHORIZED);
+      });
+
+      test('should return the resources', () => {
+        return spec()
+          .get('/bills')
+          .withHeaders({
+            Authorization: `Bearer $S{access_token}`,
+          })
+          .expectStatus(HttpStatus.OK);
+      });
+    });
+
+    describe('/:id', () => {
+      describe('GET', () => {
+        test('should throw if there is no current user', () => {
+          return spec()
+            .get(`/bills/${TestIds.EXISTENT}`)
+            .expectStatus(HttpStatus.UNAUTHORIZED);
+        });
+
+        test('should throw if the resource does not exist', () => {
+          return spec()
+            .get(`/bills/${TestIds.NON_EXISTENT}`)
+            .withHeaders({
+              Authorization: `Bearer $S{access_token}`,
+            })
+            .expectStatus(HttpStatus.NOT_FOUND);
+        });
+
+        test('should return the resource', () => {
+          return spec()
+            .get(`/bills/${TestIds.EXISTENT}`)
+            .withHeaders({
+              Authorization: `Bearer $S{access_token}`,
+            })
+            .expectStatus(HttpStatus.OK);
+        });
+      });
+
+      describe('DELETE', () => {
+        test('should throw if there is no current user', () => {
+          return spec()
+            .delete(`/bills/${TestIds.EXISTENT}`)
+            .expectStatus(HttpStatus.UNAUTHORIZED);
+        });
+
+        test('should throw if the resource does not exist', () => {
+          return spec()
+            .delete(`/bills/${TestIds.NON_EXISTENT}`)
+            .withHeaders({
+              Authorization: `Bearer $S{access_token}`,
+            })
+            .expectStatus(HttpStatus.NOT_FOUND);
+        });
+
+        test('should delete the resource', () => {
+          return spec()
+            .delete(`/bills/${TestIds.EXISTENT}`)
+            .withHeaders({
+              Authorization: `Bearer $S{access_token}`,
+            })
+            .expectStatus(HttpStatus.OK);
+        });
+      });
+    });
+  });
 
   test.todo('Invoices');
 });
