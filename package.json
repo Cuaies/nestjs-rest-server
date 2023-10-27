@@ -1,6 +1,6 @@
 {
   "name": "nestjs-rest-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "prisma": {
     "seed": "ts-node --transpile-only prisma/seed.ts"
