@@ -219,5 +219,74 @@ describe('App (e2e)', () => {
     });
   });
 
-  test.todo('Invoices');
+  describe('/invoices', () => {
+    describe('/', () => {
+      test('should throw if there is no current user', () => {
+        return spec().get('/invoices').expectStatus(HttpStatus.UNAUTHORIZED);
+      });
+
+      test('should return the resources', () => {
+        return spec()
+          .get('/invoices')
+          .withHeaders({
+            Authorization: `Bearer $S{access_token}`,
+          })
+          .expectStatus(HttpStatus.OK);
+      });
+    });
+
+    describe('/:id', () => {
+      describe('GET', () => {
+        test('should throw if there is no current user', () => {
+          return spec()
+            .get(`/invoices/${TestIds.EXISTENT}`)
+            .expectStatus(HttpStatus.UNAUTHORIZED);
+        });
+
+        test('should throw if the resource does not exist', () => {
+          return spec()
+            .get(`/invoices/${TestIds.NON_EXISTENT}`)
+            .withHeaders({
+              Authorization: `Bearer $S{access_token}`,
+            })
+            .expectStatus(HttpStatus.NOT_FOUND);
+        });
+
+        test('should return the resource', () => {
+          return spec()
+            .get(`/invoices/${TestIds.EXISTENT}`)
+            .withHeaders({
+              Authorization: `Bearer $S{access_token}`,
+            })
+            .expectStatus(HttpStatus.OK);
+        });
+      });
+
+      describe('DELETE', () => {
+        test('should throw if there is no current user', () => {
+          return spec()
+            .delete(`/invoices/${TestIds.EXISTENT}`)
+            .expectStatus(HttpStatus.UNAUTHORIZED);
+        });
+
+        test('should throw if the resource does not exist', () => {
+          return spec()
+            .delete(`/invoices/${TestIds.NON_EXISTENT}`)
+            .withHeaders({
+              Authorization: `Bearer $S{access_token}`,
+            })
+            .expectStatus(HttpStatus.NOT_FOUND);
+        });
+
+        test('should delete the resource', () => {
+          return spec()
+            .delete(`/invoices/${TestIds.EXISTENT}`)
+            .withHeaders({
+              Authorization: `Bearer $S{access_token}`,
+            })
+            .expectStatus(HttpStatus.OK);
+        });
+      });
+    });
+  });
 });
