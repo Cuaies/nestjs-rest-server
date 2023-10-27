@@ -29,7 +29,8 @@
     "db:prod:up": "docker compose up prod-db -d",
     "db:prod:restart": "dotenv -e .env.prod -- npm run db:prod:rm && npm run db:prod:up && sleep 3 && npm run prisma:deploy",
     "pretest:e2e": "dotenv -e .env.test -- npm run db:test:restart",
-    "test:e2e": "dotenv -e .env.test -- jest --config ./test/jest-e2e.json"
+    "test:e2e": "dotenv -e .env.test -- jest --config ./test/jest-e2e.json",
+    "release": "release-it"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -56,6 +57,7 @@
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
+    "@release-it/conventional-changelog": "^7.0.2",
     "@types/bcrypt": "^5.0.1",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
@@ -70,6 +72,7 @@
     "jest": "^29.5.0",
     "lint-staged": "^15.0.2",
     "prettier": "^3.0.0",
+    "release-it": "^16.2.1",
     "source-map-support": "^0.5.21",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
