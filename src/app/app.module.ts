@@ -4,6 +4,7 @@ import { PrismaModule } from '../shared/prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { BillModule } from './modules/bill/bill.module';
+import { InvoiceModule } from './modules/invoice/invoice.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { BillModule } from './modules/bill/bill.module';
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     BillModule,
+    InvoiceModule,
   ],
 })
 export class AppModule implements NestModule {
