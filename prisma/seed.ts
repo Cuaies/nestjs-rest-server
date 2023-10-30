@@ -26,24 +26,67 @@ export async function seedDatabase(
   prismaClient: PrismaClient = prisma,
   seedData: SeedData,
 ) {
-  prismaClient.$transaction([
-    prismaClient.user.deleteMany({}),
-
-    ...(await createBulkInsertOperations(seedData)),
-  ]);
+  prismaClient.$transaction(async () => {
+    await createBulkUpsertOperations(prismaClient, seedData);
+  });
 }
 
 /**
- * Creates bulk data operations to seed the database.
+ * Creates bulk data operations to seed the database with.
  */
-async function createBulkInsertOperations(seedData: SeedData) {
+async function createBulkUpsertOperations(
+  prismaClient: PrismaClient,
+  seedData: SeedData,
+) {
   const { users, bills, invoices } = generateSeedData(seedData);
 
-  return [
-    prisma.user.createMany({ data: users }),
-    prisma.bill.createMany({ data: bills }),
-    prisma.invoice.createMany({ data: invoices }),
-  ];
+  for (const user of users) {
+    const { id, ...userClone } = user;
+
+    await prismaClient.user.upsert({
+      where: {
+        id: user.id,
+      },
+      create: {
+        ...userClone,
+      },
+      update: {
+        ...user,
+      },
+    });
+  }
+
+  for (const bill of bills) {
+    const { id, ...billClone } = bill;
+
+    await prismaClient.bill.upsert({
+      where: {
+        id: bill.id,
+      },
+      create: {
+        ...billClone,
+      },
+      update: {
+        ...bill,
+      },
+    });
+  }
+
+  for (const invoice of invoices) {
+    const { id, ...invoiceClone } = invoice;
+
+    await prismaClient.invoice.upsert({
+      where: {
+        id: invoice.id,
+      },
+      create: {
+        ...invoiceClone,
+      },
+      update: {
+        ...invoice,
+      },
+    });
+  }
 }
 
 /**

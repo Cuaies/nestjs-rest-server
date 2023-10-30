@@ -4,7 +4,6 @@ import { HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from '../src/app/app.module';
 import { GeneralExceptionsFilter } from '../src/core/filters';
 import { setBaseUrl } from 'pactum/src/exports/request';
-import { PrismaService } from '../src/shared/prisma/prisma.service';
 import { spec } from 'pactum';
 import { seedData } from '../prisma/seedData';
 import { LoginDTO, RegisterDTO } from '../src/app/modules/auth/dto';
@@ -14,7 +13,6 @@ describe('App (e2e)', () => {
   const PORT = 3005;
 
   let app: INestApplication;
-  let prismaService: PrismaService;
   let httpAdapter: HttpAdapterHost;
 
   beforeAll(async () => {
@@ -24,7 +22,6 @@ describe('App (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
 
-    prismaService = app.get(PrismaService);
     httpAdapter = app.get(HttpAdapterHost);
 
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
@@ -32,8 +29,6 @@ describe('App (e2e)', () => {
 
     await app.init();
     await app.listen(PORT);
-
-    await prismaService.cleanDb();
 
     setBaseUrl(`http://localhost:${PORT}`);
   });
@@ -50,9 +45,10 @@ describe('App (e2e)', () => {
         name: 'test',
       };
 
-      beforeEach(async () => {
-        await prismaService.cleanDb();
-      });
+      const DTO2: RegisterDTO = {
+        email: 'test2@test.com',
+        password: 'password',
+      };
 
       test('should throw if no body is provided', async () => {
         return spec()
@@ -74,15 +70,6 @@ describe('App (e2e)', () => {
           .expectStatus(HttpStatus.BAD_REQUEST);
       });
 
-      test('should throw if email already exists', async () => {
-        await prismaService.user.create({ data: DTO });
-
-        return spec()
-          .post('/auth/register')
-          .withBody({ ...DTO })
-          .expectStatus(HttpStatus.CONFLICT);
-      });
-
       test('should register if no name is provided', async () => {
         return spec()
           .post('/auth/register')
@@ -93,18 +80,20 @@ describe('App (e2e)', () => {
       test('should register if name is provided', async () => {
         return spec()
           .post('/auth/register')
-          .withBody({ ...DTO })
+          .withBody({ ...DTO2 })
           .expectStatus(HttpStatus.CREATED);
+      });
+
+      test('should throw if email already exists', async () => {
+        return spec()
+          .post('/auth/register')
+          .withBody({ ...DTO })
+          .expectStatus(HttpStatus.CONFLICT);
       });
     });
 
     describe('/login', () => {
       const DTO: LoginDTO = seedData.users[0];
-
-      beforeAll(async () => {
-        await prismaService.cleanDb();
-        await prismaService.seedDatabase(seedData);
-      });
 
       test('should throw if no body is provided', async () => {
         return spec().post('/auth/login').expectStatus(HttpStatus.BAD_REQUEST);
